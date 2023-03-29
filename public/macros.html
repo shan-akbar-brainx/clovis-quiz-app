@@ -1,314 +1,313 @@
 
-<section id="shopify-section-quiz-custom-macros" class="shopify-section section"><link href="//cdn.shopify.com/s/files/1/0003/2250/2720/t/74/assets/quiz-custom-macros.css?v=53408334475505437321679053198" rel="stylesheet" type="text/css" media="all"/>
-<script src="//cdn.shopify.com/s/files/1/0003/2250/2720/t/74/assets/quiz-custom-macros.js?v=111603181540343972631679053213" defer="defer"></script>
-<style>
-  .quiz-custom-macros{
-    max-width: 1280px;
-    margin: 0 auto;
-}
+    <style>
+        .quiz-custom-macros{
+          max-width: 1280px;
+          margin: 0 auto;
+      }
+      
+      .quiz-custom-macros__header{
+          background-color: #A7A7A7;
+          border-top: 13px solid #FE1067;
+          padding: 20px 18px;
+      }
 
-.quiz-custom-macros__header{
-    background-color: #A7A7A7;
-    border-top: 13px solid #FE1067;
-    padding: 20px 18px;
-}
-
-.quiz-custom-macros__body{
-    background-color: #D6D6D3;
-    height: 1280px;
-}
-
-.quiz-custom-macros__body__upper{
-    display: flex;
-}
-
-.quiz-custom-macros__percentGraph{
-    padding: 10px 20px;
-    margin-left: 30px;
-}
-
-.quiz-custom-macros__percentGraph p{
-    margin: 0;
-    font-family: Tahoma, sans-serif;
-    font-size: 14px;
-    color: black;
-}
-
-.quiz-custom-macros__percentGraphWrapper{
-    display: flex;
-    align-items: flex-end;
-    margin-top: 30px;
-}
-
-.quiz-custom-macros__percentGraphScale{
-    margin-right: 25px;
-    margin-bottom: 17px;
-}
-
-.quiz-custom-macros__percentGraphScale p{
-    font-size: 12px;
-    margin: 26px 0;
-    line-height: 1;
-}
-
-.quiz-custom-macros__percentGraphScale p:nth-child(6){
-    margin-bottom: 0;
-}
-
-.quiz-custom-macros__percentGraphBars{
-    display: flex;
-    align-items: flex-end;
-}
-
-.quiz-custom-macros__percentGraphBar{
-    width: 75px;
-    display: block !important;
-    margin-right: 10px;
-}
-
-.quiz-custom-macros__percentGraphBar__Fat{
-    background-color: #FE1067;
-    height: 200px;
-}
-
-.quiz-custom-macros__percentGraphBar__Protein{
-    background-color: #A7A7A7;
-    height: 150px;
-}
-
-.quiz-custom-macros__percentGraphBar__NetCarbs{
-    background-color: #ffffff;
-    height: 60px;
-}
-
-.quiz-custom-macros__percentGraphLabels{
-    display: flex;
-}
-
-.quiz-custom-macros__percentGraphLabel span{
-    font-size: 12px;
-}
-
-.quiz-custom-macros__percentGraphLabel__Label{
-    display: inline-block !important;
-    width: 10px;
-    height: 10px;
-}
-
-.quiz-custom-macros__percentGraphLabel__Label__Fat{
-    background-color: #FE1067;
-}
-
-.quiz-custom-macros__percentGraphLabel__Label__Protein{
-    background-color: #A7A7A7;
-}
-
-.quiz-custom-macros__percentGraphLabel__Protein{
-    margin-left: 56px;
-}
-
-.quiz-custom-macros__percentGraphLabel__Label__NetCarbs{
-    background-color: #ffffff;
-}
-
-.quiz-custom-macros__percentGraphLabel__NetCarbs{
-    margin-left: 37px;
-}
-
-.quiz-custom-macros__NeutrientValues{
-    margin-left: 420px;
-    margin-top: 20px;
-}
-
-.quiz-custom-macros__TotalCalories p{
-    color: black;
-    font-size: 15.0pt;
-    line-height: 1;
-    font-family: auto;
-    border-bottom: 2pt solid #B2B2B0;
-    margin-bottom: 0;
-}
-
-.quiz-custom-macros__TotalCalories span{
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.quiz-custom-macros__NeutrientValue p{
-    color: black;
-    font-size: 11.0pt;
-    line-height: 1;
-    font-family: auto;
-    border-bottom: 2pt solid #B2B2B0;
-    margin-bottom: 0;
-}
-
-.quiz-custom-macros__NeutrientValue span{
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.quiz-custom-macros__body__lower{
-    display: flex;
-    color: black;
-    font-family: auto;
-    font-weight: 600;
-}
-
-.quiz-custom-macros__UserInfo{
-    margin-left: 50px;
-}
-
-.quiz-custom-macros__MacroNutrientValues{
-    margin-left: 300px;
-}
-
-.quiz-custom-macros__UserInfo p:not(:first-child,:last-child){
-    border-bottom: 2pt solid #B2B2B0;
-    margin: 8px 0;
-    padding-bottom: 4px;
-}
-
-.quiz-custom-macros__UserInfo p > span:nth-child(1){
-    display: inline-block;
-    width: 180px;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inGrams p{
-    border-bottom: 2pt solid #B2B2B0;
-    margin: 8px 0;
-    padding-bottom: 4px;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inGrams p > span:nth-child(1){
-    display: inline-block;
-    width: 180px;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inPercent{
-    margin-top: 60px;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inPercent p{
-    border-bottom: 2pt solid #B2B2B0;
-    margin: 8px 0;
-    padding-bottom: 4px;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inPercent p > span:nth-child(1){
-    display: inline-block;
-    width: 180px;
-}
-
-div.quiz-custom-macros__UserInfo > p:nth-child(2){
-    color: #FE1067;
-    line-height: 1;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inGrams > p:nth-child(1){
-    color: #FE1067;
-    line-height: 1;
-}
-
-.quiz-custom-macros__MacroNutrientValues__inPercent > p:nth-child(1){
-    color: #FE1067;
-    line-height: 1;
-}
-
-.quiz-custom-macros__UserInfo > p:nth-child(9) > span:nth-child(2){
-    font-size: 28px;
-}
-</style>
-<div class="quiz-custom-macros__wrapper">
-    <div class="quiz-custom-macros">
-        <div class="quiz-custom-macros__header">
-            <img src="https://cdn.shopify.com/s/files/1/0003/2250/2720/files/clovis-macros_400x.png?v=1678808269"/>
-        </div>
-        <div class="quiz-custom-macros__body">
-            <div class="quiz-custom-macros__body__upper">
-                <div class="quiz-custom-macros__percentGraph">
-                    <p>Percentage of Macro Nutrient Ratios</p>
-                    <div class="quiz-custom-macros__percentGraphWrapper">
-                        <div class="quiz-custom-macros__percentGraphScale">
-                            <p>50</p>
-                            <p>40</p>
-                            <p>30</p>
-                            <p>20</p>
-                            <p>10</p>
-                            <p>0</p>
-                        </div>
-                        <div class="quiz-custom-macros__percentGraphData">
-                            <div class="quiz-custom-macros__percentGraphBars">
-                                <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__Fat" style="height: 200px;"></div>
-                                <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__Protein" style="height: 120px;"></div>
-                                <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__NetCarbs" style="height: 80px;"></div>
-                            </div>
-                            <div class="quiz-custom-macros__percentGraphLabels">
-                                <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__Fat">
-                                    <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__Fat"></div>
-                                    <span>Fat</span>
-                                </div>
-                                <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__Protein">
-                                    <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__Protein"></div>
-                                    <span>Protein</span>
-                                </div>
-                                <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__NetCarbs">
-                                    <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__NetCarbs"></div>
-                                    <span>Net Carbs</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quiz-custom-macros__NeutrientValues">
-                    <div class="quiz-custom-macros__TotalCalories">
-                        <p>TOTAL DAILY CALORIES</p>
-                        <span> 1850</span>
-                    </div>
-                    <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__Fat">
-                        <p>TOTAL FAT (in grams)</p>
-                        <span>103</span>
-                    </div>
-                    <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__Protein">
-                        <p>TOTAL PROTEIN (in grams)</p>
-                        <span>139</span>
-                    </div>
-                    <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__NetCarbs">
-                        <p>TOTAL NET CARBS (in grams)</p>
-                        <span>93</span>
-                    </div>
-                </div>
-            </div>
-            <div class="quiz-custom-macros__body__lower">
-                <div class="quiz-custom-macros__UserInfo">
-                    <p>Shan Akbar</p>
-                    <p><span>ITEM</span><span>VALUE</span></p>
-                    <p><span>Age</span><span>24</span></p>
-                    <p><span>Height</span><span>5'7"</span></p>
-                    <p><span>Weight</span><span>128</span></p>
-                    <p><span>Body Fat %</span><span>N/A</span></p>
-                    <p><span>Activity Level</span><span>sedentary</span></p>
-                    <p><span>Health Goal</span><span>maintain</span></p>
-                    <p><span>TOTAL CALORIES</span><span>1850</span></p>
-                </div>
-                <div class="quiz-custom-macros__MacroNutrientValues">
-                    <div class="quiz-custom-macros__MacroNutrientValues__inGrams">
-                        <p>MACRO NUTRIENTTOTAL (in grams)</p>
-                        <p><span>FAT</span><span>103 grams</span></p>
-                        <p><span>PROTEIN</span><span>139 grams</span></p>
-                        <p><span>NET CARBS</span><span>93 grams</span></p>
-                    </div>
-                    <div class="quiz-custom-macros__MacroNutrientValues__inPercent">
-                        <p>MACRO NUTRIENTTOTAL (% of daily diet)</p>
-                        <p><span>FAT</span><span>50%</span></p>
-                        <p><span>PROTEIN</span><span>30%</span></p>
-                        <p><span>NET CARBS</span><span>20%</span></p> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-</section>
+      .quiz-custom-macros__header img{
+        max-width: 380px;
+      }
+      
+      .quiz-custom-macros__body{
+          background-color: #D6D6D3;
+          height: 1280px;
+      }
+      
+      .quiz-custom-macros__body__upper{
+          display: flex;
+      }
+      
+      .quiz-custom-macros__percentGraph{
+          padding: 10px 20px;
+          margin-left: 30px;
+      }
+      
+      .quiz-custom-macros__percentGraph p{
+          margin: 0;
+          font-family: Tahoma, sans-serif;
+          font-size: 14px;
+          color: black;
+      }
+      
+      .quiz-custom-macros__percentGraphWrapper{
+          display: flex;
+          align-items: flex-end;
+          margin-top: 30px;
+      }
+      
+      .quiz-custom-macros__percentGraphScale{
+          margin-right: 25px;
+          margin-bottom: 17px;
+      }
+      
+      .quiz-custom-macros__percentGraphScale p{
+          font-size: 12px;
+          margin: 26px 0;
+          line-height: 1;
+      }
+      
+      .quiz-custom-macros__percentGraphScale p:nth-child(6){
+          margin-bottom: 0;
+      }
+      
+      .quiz-custom-macros__percentGraphBars{
+          display: flex;
+          align-items: flex-end;
+      }
+      
+      .quiz-custom-macros__percentGraphBar{
+          width: 75px;
+          display: block !important;
+          margin-right: 10px;
+      }
+      
+      .quiz-custom-macros__percentGraphBar__Fat{
+          background-color: #FE1067;
+          height: 200px;
+      }
+      
+      .quiz-custom-macros__percentGraphBar__Protein{
+          background-color: #A7A7A7;
+          height: 150px;
+      }
+      
+      .quiz-custom-macros__percentGraphBar__NetCarbs{
+          background-color: #ffffff;
+          height: 60px;
+      }
+      
+      .quiz-custom-macros__percentGraphLabels{
+          display: flex;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel span{
+          font-size: 12px;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__Label{
+          display: inline-block !important;
+          width: 10px;
+          height: 10px;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__Label__Fat{
+          background-color: #FE1067;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__Label__Protein{
+          background-color: #A7A7A7;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__Protein{
+          margin-left: 56px;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__Label__NetCarbs{
+          background-color: #ffffff;
+      }
+      
+      .quiz-custom-macros__percentGraphLabel__NetCarbs{
+          margin-left: 37px;
+      }
+      
+      .quiz-custom-macros__NeutrientValues{
+          margin-left: 420px;
+          margin-top: 20px;
+      }
+      
+      .quiz-custom-macros__TotalCalories p{
+          color: black;
+          font-size: 15.0pt;
+          line-height: 1;
+          font-family: auto;
+          border-bottom: 2pt solid #B2B2B0;
+          margin-bottom: 0;
+      }
+      
+      .quiz-custom-macros__TotalCalories span{
+          font-size: 32px;
+          font-weight: bold;
+      }
+      
+      .quiz-custom-macros__NeutrientValue p{
+          color: black;
+          font-size: 11.0pt;
+          line-height: 1;
+          font-family: auto;
+          border-bottom: 2pt solid #B2B2B0;
+          margin-bottom: 0;
+      }
+      
+      .quiz-custom-macros__NeutrientValue span{
+          font-size: 32px;
+          font-weight: bold;
+      }
+      
+      .quiz-custom-macros__body__lower{
+          display: flex;
+          color: black;
+          font-family: auto;
+          font-weight: 600;
+      }
+      
+      .quiz-custom-macros__UserInfo{
+          margin-left: 50px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues{
+          margin-left: 300px;
+      }
+      
+      .quiz-custom-macros__UserInfo p:not(:first-child,:last-child){
+          border-bottom: 2pt solid #B2B2B0;
+          margin: 8px 0;
+          padding-bottom: 4px;
+      }
+      
+      .quiz-custom-macros__UserInfo p > span:nth-child(1){
+          display: inline-block;
+          width: 180px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inGrams p{
+          border-bottom: 2pt solid #B2B2B0;
+          margin: 8px 0;
+          padding-bottom: 4px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inGrams p > span:nth-child(1){
+          display: inline-block;
+          width: 180px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inPercent{
+          margin-top: 60px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inPercent p{
+          border-bottom: 2pt solid #B2B2B0;
+          margin: 8px 0;
+          padding-bottom: 4px;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inPercent p > span:nth-child(1){
+          display: inline-block;
+          width: 180px;
+      }
+      
+      div.quiz-custom-macros__UserInfo > p:nth-child(2){
+          color: #FE1067;
+          line-height: 1;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inGrams > p:nth-child(1){
+          color: #FE1067;
+          line-height: 1;
+      }
+      
+      .quiz-custom-macros__MacroNutrientValues__inPercent > p:nth-child(1){
+          color: #FE1067;
+          line-height: 1;
+      }
+      
+      .quiz-custom-macros__UserInfo > p:nth-child(9) > span:nth-child(2){
+          font-size: 28px;
+      }
+      </style>
+      <div class="quiz-custom-macros__wrapper">
+          <div class="quiz-custom-macros">
+              <div class="quiz-custom-macros__header">
+                  <img src="https://cdn.shopify.com/s/files/1/0003/2250/2720/files/clovis-macros.png?v=1678808269"/>
+              </div>
+              <div class="quiz-custom-macros__body">
+                  <div class="quiz-custom-macros__body__upper">
+                      <div class="quiz-custom-macros__percentGraph">
+                          <p>Percentage of Macro Nutrient Ratios</p>
+                          <div class="quiz-custom-macros__percentGraphWrapper">
+                              <div class="quiz-custom-macros__percentGraphScale">
+                                  <p>50</p>
+                                  <p>40</p>
+                                  <p>30</p>
+                                  <p>20</p>
+                                  <p>10</p>
+                                  <p>0</p>
+                              </div>
+                              <div class="quiz-custom-macros__percentGraphData">
+                                  <div class="quiz-custom-macros__percentGraphBars">
+                                      <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__Fat" style="height: 200px;"></div>
+                                      <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__Protein" style="height: 120px;"></div>
+                                      <div class="quiz-custom-macros__percentGraphBar quiz-custom-macros__percentGraphBar__NetCarbs" style="height: 80px;"></div>
+                                  </div>
+                                  <div class="quiz-custom-macros__percentGraphLabels">
+                                      <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__Fat">
+                                          <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__Fat"></div>
+                                          <span>Fat</span>
+                                      </div>
+                                      <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__Protein">
+                                          <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__Protein"></div>
+                                          <span>Protein</span>
+                                      </div>
+                                      <div class="quiz-custom-macros__percentGraphLabel quiz-custom-macros__percentGraphLabel__NetCarbs">
+                                          <div class="quiz-custom-macros__percentGraphLabel__Label quiz-custom-macros__percentGraphLabel__Label__NetCarbs"></div>
+                                          <span>Net Carbs</span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="quiz-custom-macros__NeutrientValues">
+                          <div class="quiz-custom-macros__TotalCalories">
+                              <p>TOTAL DAILY CALORIES</p>
+                              <span> 1702</span>
+                          </div>
+                          <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__Fat">
+                              <p>TOTAL FAT (in grams)</p>
+                              <span>95</span>
+                          </div>
+                          <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__Protein">
+                              <p>TOTAL PROTEIN (in grams)</p>
+                              <span>128</span>
+                          </div>
+                          <div class="quiz-custom-macros__NeutrientValue quiz-custom-macros__NeutrientValue__NetCarbs">
+                              <p>TOTAL NET CARBS (in grams)</p>
+                              <span>85</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="quiz-custom-macros__body__lower">
+                      <div class="quiz-custom-macros__UserInfo">
+                          <p>Shan Akbar</p>
+                          <p><span>ITEM</span><span>VALUE</span></p>
+                          <p><span>Age</span><span>55</span></p>
+                          <p><span>Height</span><span>5'6"</span></p>
+                          <p><span>Weight</span><span>128</span></p>
+                          <p><span>Body Fat %</span><span>N/A</span></p>
+                          <p><span>Activity Level</span><span>lightly_active</span></p>
+                          <p><span>Health Goal</span><span>maintain</span></p>
+                          <p><span>TOTAL CALORIES</span><span>1702</span></p>
+                      </div>
+                      <div class="quiz-custom-macros__MacroNutrientValues">
+                          <div class="quiz-custom-macros__MacroNutrientValues__inGrams">
+                              <p>MACRO NUTRIENTTOTAL (in grams)</p>
+                              <p><span>FAT</span><span>95 grams</span></p>
+                              <p><span>PROTEIN</span><span>128 grams</span></p>
+                              <p><span>NET CARBS</span><span>85 grams</span></p>
+                          </div>
+                          <div class="quiz-custom-macros__MacroNutrientValues__inPercent">
+                              <p>MACRO NUTRIENTTOTAL (% of daily diet)</p>
+                              <p><span>FAT</span><span>50%</span></p>
+                              <p><span>PROTEIN</span><span>30%</span></p>
+                              <p><span>NET CARBS</span><span>20%</span></p> 
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>

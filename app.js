@@ -7,9 +7,15 @@ const fetch = require('node-fetch');
 const DomParser = require('dom-parser');
 const sgMail = require('@sendgrid/mail');
 const PORT = 3000;
+const cors = require('cors');
+const app = express();
+
+let pdf_1_saved = false;
+let pdf_2_saved = false;
+
+
 require('dotenv').config();
 
-const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
@@ -18,7 +24,9 @@ app.use(express.static('public'));
 
 async function html_to_pdf(filename, pdfName){
 
-const browser = await puppeteer.launch();
+const browser = await puppeteer.launch({
+  executablePath: '/usr/bin/chromium-browser'
+});
 // Create a new page
 const page = await browser.newPage();
 
@@ -38,43 +46,77 @@ const pdf = await page.pdf({
     printBackground: true,
     format: 'A3',
   });
+
+if(pdfName == "your_custom_recommendations"){
+    pdf_1_saved = true;
+  }
+if(pdfName == "your_custom_macros"){
+    pdf_2_saved = true;
+ }
   await browser.close();
 }
+
+app.get('/', (req, res) => {
+  res.send('Wellcome to clovis quiz app!');
+});
 
 app.post('/composePlan', (req, res)=> {
   let data = req.body;
   let userAnswers = JSON.parse(data.userAnswers);
   let quizResults = JSON.parse(data.quizResults);
+  let themeId = JSON.parse(data.themeId);
+  
+  fetchPageRenderSave("assets/your-custom-recommendations.js.liquid", themeId,"recommendations.html", "your_custom_recommendations", userAnswers);
+  fetchPageRenderSave("assets/your-custom-macros.js.liquid", themeId, "macros.html", "your_custom_macros", quizResults);
 
-  fetchPageRenderSave("https://www.iamclovis.com/pages/your-custom-recommendations", "recomm.html", "your_custom_recomm", userAnswers);
-  fetchPageRenderSave("https://www.iamclovis.com/pages/your-custom-macros", "macros.html", "your_custom_macros", quizResults);
-  composeEmail("https://www.iamclovis.com/pages/clovis-quiz-email-template", "quiz_email_template","your_custom_macros","your_custom_recomm",userAnswers);
+  let interval = setInterval(function(){
+    if(pdf_1_saved && pdf_2_saved){
+      pdf_1_saved = false;
+      pdf_2_saved = false;
+      composeEmail(103149338852, "your_custom_macros", "your_custom_recommendations", userAnswers);
+      clearInterval(interval);
+    }
+  });
+  res.send(req.body);
 });
 
-function fetchPageRenderSave(url, filename, elementId, renderData){
-  fetch   (
+
+function fetchPageRenderSave(assetName, themeId, filename, elementId, renderData){
+const apiKey = process.env.API_KEY;
+const accessToken = process.env.API_ACCESS_TOKEN;
+const store = process.env.SHOP_NAME;
+const hostName = store + '.myshopify.com';
+const apiVersion = '2023-01';
+const apiLocation = '/admin/api/';
+const resource = "/themes/" + themeId;
+const shopAssetsUrl = 'https://' + hostName + apiLocation + apiVersion + resource +  '/assets.json?asset[key]=' + assetName;
+
+let url = shopAssetsUrl;
+
+fetch   (
     url,
     {
         method: "GET",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-Shopify-Access-Token" : accessToken
         }
     }
   )
   .then(res => {
       console.log('status = ' + res.status + ' , ' + res.statusText);
       getData(res, filename, elementId, renderData);
+
   })
   .catch(err => console.error(err));
 }
 
 
-
-
-
 async function getData(res, filename, elementId ,renderData){
   let parser = new DomParser();
   let data = await res.text();
+  data = parser.parseFromString(data, "text/xml");
+  data = JSON.parse(data.rawHTML).asset.value
   data = parser.parseFromString(data, "text/xml");
   let html = data.getElementById(elementId).innerHTML;
   
@@ -90,29 +132,43 @@ async function getData(res, filename, elementId ,renderData){
 
 }
 
-function composeEmail(url, elementId ,macrosFileName, recommFileName, userAnswers){
-  fetch   (
+
+function composeEmail(emailPageId, macrosFileName, recommFileName, userAnswers){
+const apiKey = process.env.API_KEY;
+const accessToken = process.env.API_ACCESS_TOKEN;
+const store = process.env.SHOP_NAME;
+const hostName = store + '.myshopify.com';
+const apiVersion = '2023-01';
+const apiLocation = '/admin/api/';
+const resource = "/pages/" + emailPageId;
+const shopAssetsUrl = 'https://' + hostName + apiLocation + apiVersion + resource +  '.json';
+let url = shopAssetsUrl;
+
+fetch   (
     url,
     {
         method: "GET",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-Shopify-Access-Token" : accessToken
         }
     }
-    )
-    .then(res => {
+  )
+  .then(res => {
         console.log('status = ' + res.status + ' , ' + res.statusText);
-        getEmailTemplate(res, elementId, macrosFileName, recommFileName, userAnswers);
+        getEmailTemplate(res, macrosFileName, recommFileName, userAnswers);
     })
     .catch(err => console.error(err));
   }
 
- async function getEmailTemplate(res, elementId, macrosFileName, recommFileName, renderData){
+async function getEmailTemplate(res, macrosFileName, recommFileName, renderData){
   let parser = new DomParser();
   let data = await res.text();
   data = parser.parseFromString(data, "text/xml");
-  let html = data.getElementById(elementId).innerHTML;
-  
+
+  let html = JSON.parse(data.rawHTML).page.body_html;
+  html = html.replaceAll("&lt;", "<");
+  html = html.replaceAll("&gt;", ">");
   html = ejs.render(html, {data: renderData.personal_details});
 
   let pathToAttachment1 = macrosFileName + ".pdf";
@@ -147,15 +203,11 @@ function composeEmail(url, elementId ,macrosFileName, recommFileName, userAnswer
     .send(msg)
     .then(() => {}, error => {
       console.error(error);
-  
       if (error.response) {
         console.error(error.response.body)
       }
     });
 }
-
-  
- 
 app.listen(PORT, function(err){
     if (err) console.log("Error in server setup")
     console.log("Server listening on Port", PORT);
