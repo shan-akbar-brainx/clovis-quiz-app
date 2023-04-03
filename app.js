@@ -6,16 +6,14 @@ const ejs = require('ejs');
 const fetch = require('node-fetch');
 const DomParser = require('dom-parser');
 const sgMail = require('@sendgrid/mail');
+
 const PORT = 3000;
-const cors = require('cors');
-const app = express();
+require('dotenv').config();
 
 let pdf_1_saved = false;
 let pdf_2_saved = false;
 
-
-require('dotenv').config();
-
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
@@ -24,9 +22,7 @@ app.use(express.static('public'));
 
 async function html_to_pdf(filename, pdfName){
 
-const browser = await puppeteer.launch({
-  executablePath: '/usr/bin/chromium-browser'
-});
+const browser = await puppeteer.launch();
 // Create a new page
 const page = await browser.newPage();
 
@@ -46,19 +42,14 @@ const pdf = await page.pdf({
     printBackground: true,
     format: 'A3',
   });
-
-if(pdfName == "your_custom_recommendations"){
+  if(pdfName == "your_custom_recommendations"){
     pdf_1_saved = true;
   }
-if(pdfName == "your_custom_macros"){
+  if(pdfName == "your_custom_macros"){
     pdf_2_saved = true;
- }
+  }
   await browser.close();
 }
-
-app.get('/', (req, res) => {
-  res.send('Wellcome to clovis quiz app!');
-});
 
 app.post('/composePlan', (req, res)=> {
   let data = req.body;
@@ -77,9 +68,8 @@ app.post('/composePlan', (req, res)=> {
       clearInterval(interval);
     }
   });
-  res.send(req.body);
+  
 });
-
 
 function fetchPageRenderSave(assetName, themeId, filename, elementId, renderData){
 const apiKey = process.env.API_KEY;
@@ -111,7 +101,6 @@ fetch   (
   .catch(err => console.error(err));
 }
 
-
 async function getData(res, filename, elementId ,renderData){
   let parser = new DomParser();
   let data = await res.text();
@@ -131,7 +120,6 @@ async function getData(res, filename, elementId ,renderData){
   }); 
 
 }
-
 
 function composeEmail(emailPageId, macrosFileName, recommFileName, userAnswers){
 const apiKey = process.env.API_KEY;
@@ -161,14 +149,15 @@ fetch   (
     .catch(err => console.error(err));
   }
 
-async function getEmailTemplate(res, macrosFileName, recommFileName, renderData){
+ async function getEmailTemplate(res, macrosFileName, recommFileName, renderData){
   let parser = new DomParser();
   let data = await res.text();
+ 
   data = parser.parseFromString(data, "text/xml");
-
+  
   let html = JSON.parse(data.rawHTML).page.body_html;
-  html = html.replaceAll("&lt;", "<");
-  html = html.replaceAll("&gt;", ">");
+  html = html.split("&lt;").join("<");
+  html = html.split("&gt;").join(">");
   html = ejs.render(html, {data: renderData.personal_details});
 
   let pathToAttachment1 = macrosFileName + ".pdf";
@@ -203,11 +192,14 @@ async function getEmailTemplate(res, macrosFileName, recommFileName, renderData)
     .send(msg)
     .then(() => {}, error => {
       console.error(error);
+  
       if (error.response) {
         console.error(error.response.body)
       }
     });
 }
+
+  
 app.listen(PORT, function(err){
     if (err) console.log("Error in server setup")
     console.log("Server listening on Port", PORT);
