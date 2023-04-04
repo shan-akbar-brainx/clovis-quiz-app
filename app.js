@@ -7,11 +7,13 @@ const DomParser = require('dom-parser');
 const sgMail = require('@sendgrid/mail');
 
 const PORT = 3000;
+
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
@@ -187,6 +189,8 @@ async function composeEmail(res, macrosFileName, recommFileName, renderData) {
     attachment1 = attachment1.toString('base64');
     attachment2 = attachment2.toString('base64');
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    let unixTimestamp = Math.floor(new Date().getTime()/1000);
+    
     const msg = {
       to: renderData.personal_details.email,
       from: 'Justin@iamclovis.com', // Use the email address or domain you verified above
@@ -206,8 +210,8 @@ async function composeEmail(res, macrosFileName, recommFileName, renderData) {
           disposition: 'attachment',
         },
       ],
+      sendAt: (unixTimestamp + Number(renderData.send_email_after) * 60)
     };
-
     await sgMail.send(msg);
     console.log("Email sent Successfully !!!");
   } catch (err) {
