@@ -18,30 +18,28 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-async function html_to_pdf(filename, pdfName) {
+async function html_to_pdf(html) {
   try {
     const browser = await puppeteer.launch();
     // Create a new page
     const page = await browser.newPage();
 
-    // Website URL to export as pdf
-    const website_url = 'http://localhost:3000/' + filename;
-
-    // Open URL in current page
-    await page.goto(website_url, { waitUntil: 'networkidle0' });
+    await page.setContent(html, { waitUntil: 'networkidle0' });
 
     //To reflect CSS used for screens instead of print
     await page.emulateMediaType('screen');
 
     // Downlaod the PDF
-    await page.pdf({
-      path: pdfName + '.pdf',
+    const buffer = await page.pdf({
       margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
       printBackground: true,
       format: 'A3',
     });
-    console.log(pdfName + ".pdf saved successfully !!!");
+
+    const base64Pdf = buffer.toString('base64');
+    console.log("Pdf base64 string returned successfully!!!");
     await browser.close();
+    return base64Pdf;
   } catch (err) {
     console.log('error in html_to_pdf', err);
   }
@@ -53,10 +51,6 @@ app.get('/', (req, res) => {
 
 app.post('/composePlan', async (req, res) => {
 
-  const macrosPdfFileName = "your_custom_macros";
-  const recommendationsPdfFileName = "your_custom_recommendations";
-  const macrosHtmlFilename = 'macros.html';
-  const recommendationsHtmlFilename = 'recommendations.html';
   const emailTemplatePageId = "103149338852";
   try {
 
@@ -70,22 +64,27 @@ app.post('/composePlan', async (req, res) => {
       fetchPage('assets/your-custom-macros.js.liquid', themeId),
     ]);
 
-    await Promise.all([
-      getData(resRecomm, recommendationsHtmlFilename, userAnswers),
-      getData(resMacros, macrosHtmlFilename, quizResults),
+    const [html_recommendations, html_macros] = await Promise.all([
+      getData(resRecomm, userAnswers),
+      getData(resMacros, quizResults),
     ]);
 
-    await Promise.all([
-      html_to_pdf(recommendationsHtmlFilename, recommendationsPdfFileName),
-      html_to_pdf(macrosHtmlFilename, macrosPdfFileName),
+    const [recommendations_attachment, macros_attachment] = await Promise.all([
+      html_to_pdf(html_recommendations),
+      html_to_pdf(html_macros),
     ]);
 
     const resEmail = await fetchEmailTemplate(emailTemplatePageId);
-    await composeEmail(resEmail, macrosPdfFileName, recommendationsPdfFileName, userAnswers);
+    await composeEmail(resEmail, recommendations_attachment, macros_attachment, userAnswers);
 
     res.send(req.body);
+
+    console.log("request completed successfully !!!");
+
   } catch (err) {
+
     console.log('error in post endpoint', err);
+
   }
 });
 
@@ -123,7 +122,7 @@ async function fetchPage(assetName, themeId) {
   }
 }
 
-async function getData(res, filename, renderData) {
+async function getData(res, renderData) {
   try {
     let parser = new DomParser();
     let data = await res.text();
@@ -133,9 +132,8 @@ async function getData(res, filename, renderData) {
     
     html = ejs.render(html, { data: renderData });
 
-    await fs.writeFile('./public/' + filename, html);
-    console.log("Html data rendered and saved in file " + filename + " !!!");
-    return;
+    console.log("Data rendered using ejs and html string returned !!!");
+    return html;
   } catch (err) {
     console.log('error in getData', err);
   }
@@ -170,7 +168,7 @@ async function fetchEmailTemplate(emailPageId) {
   }
 }
 
-async function composeEmail(res, macrosFileName, recommFileName, renderData) {
+async function composeEmail(res, recommendations_attachment, macros_attachment, renderData) {
   try {
     let parser = new DomParser();
     let data = await res.text();
@@ -182,12 +180,6 @@ async function composeEmail(res, macrosFileName, recommFileName, renderData) {
     html = html.split('&gt;').join('>');
     html = ejs.render(html, { data: renderData.personal_details });
 
-    let pathToAttachment1 = macrosFileName + '.pdf';
-    let pathToAttachment2 = recommFileName + '.pdf';
-    attachment1 = await fs.readFile(pathToAttachment1);
-    attachment2 = await fs.readFile(pathToAttachment2);
-    attachment1 = attachment1.toString('base64');
-    attachment2 = attachment2.toString('base64');
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     let unixTimestamp = Math.floor(new Date().getTime()/1000);
     
@@ -198,14 +190,14 @@ async function composeEmail(res, macrosFileName, recommFileName, renderData) {
       html: html,
       attachments: [
         {
-          content: attachment1,
-          filename: pathToAttachment1,
+          content: recommendations_attachment,
+          filename: "Your Custom Recommendations",
           type: 'application/pdf',
           disposition: 'attachment',
         },
         {
-          content: attachment2,
-          filename: pathToAttachment2,
+          content: macros_attachment,
+          filename: "Your Custom Macros",
           type: 'application/pdf',
           disposition: 'attachment',
         },
