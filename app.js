@@ -52,6 +52,7 @@ app.get('/', (req, res) => {
 app.post('/composePlan', async (req, res) => {
 
   const emailTemplatePageId = "103149338852";
+  const customRecommendationPageId = "103030423780"
   try {
 
     let data = req.body;
@@ -60,7 +61,7 @@ app.post('/composePlan', async (req, res) => {
     let themeId = JSON.parse(data.themeId);
 
     const [resRecomm, resMacros] = await Promise.all([
-      fetchPage('assets/your-custom-recommendations.js.liquid', themeId),
+      fetchPageTemplate(customRecommendationPageId),
       fetchPage('assets/your-custom-macros.js.liquid', themeId),
     ]);
 
@@ -74,7 +75,7 @@ app.post('/composePlan', async (req, res) => {
       html_to_pdf(html_macros),
     ]);
 
-    const resEmail = await fetchEmailTemplate(emailTemplatePageId);
+    const resEmail = await fetchPageTemplate(emailTemplatePageId);
     await composeEmail(resEmail, recommendations_attachment, macros_attachment, userAnswers);
 
     res.send(req.body);
@@ -139,7 +140,7 @@ async function getData(res, renderData) {
   }
 }
 
-async function fetchEmailTemplate(emailPageId) {
+async function fetchPageTemplate(emailPageId) {
   try {
     const apiKey = process.env.API_KEY;
     const accessToken = process.env.API_ACCESS_TOKEN;
