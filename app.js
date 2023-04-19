@@ -52,6 +52,7 @@ app.get('/', (req, res) => {
 app.post('/composePlan', async (req, res) => {
 
   const emailTemplatePageId = "103149338852";
+  const customRecommendationPageId = "103030423780"
   try {
 
     let data = req.body;
@@ -60,13 +61,13 @@ app.post('/composePlan', async (req, res) => {
     let themeId = JSON.parse(data.themeId);
 
     const [resRecomm, resMacros] = await Promise.all([
-      fetchPage('assets/your-custom-recommendations.js.liquid', themeId),
+      fetchPageTemplate(customRecommendationPageId),
       fetchPage('assets/your-custom-macros.js.liquid', themeId),
     ]);
 
     const [html_recommendations, html_macros] = await Promise.all([
-      getData(resRecomm, userAnswers),
-      getData(resMacros, quizResults),
+      getPageData(resRecomm, userAnswers),
+      getAssetData(resMacros, quizResults),
     ]);
 
     const [recommendations_attachment, macros_attachment] = await Promise.all([
@@ -74,7 +75,7 @@ app.post('/composePlan', async (req, res) => {
       html_to_pdf(html_macros),
     ]);
 
-    const resEmail = await fetchEmailTemplate(emailTemplatePageId);
+    const resEmail = await fetchPageTemplate(emailTemplatePageId);
     await composeEmail(resEmail, recommendations_attachment, macros_attachment, userAnswers);
 
     res.send(req.body);
@@ -122,7 +123,7 @@ async function fetchPage(assetName, themeId) {
   }
 }
 
-async function getData(res, renderData) {
+async function getAssetData(res, renderData) {
   try {
     let parser = new DomParser();
     let data = await res.text();
@@ -135,11 +136,31 @@ async function getData(res, renderData) {
     console.log("Data rendered using ejs and html string returned !!!");
     return html;
   } catch (err) {
-    console.log('error in getData', err);
+    console.log('error in getAssetData', err);
   }
 }
 
-async function fetchEmailTemplate(emailPageId) {
+async function getPageData(res, renderData) {
+  try {
+    let parser = new DomParser();
+    let data = await res.text();
+
+    data = parser.parseFromString(data, 'text/xml');
+
+    let html = JSON.parse(data.rawHTML).page.body_html;
+    html = html.split('&lt;').join('<');
+    html = html.split('&gt;').join('>');
+    html = html.split('&amp;').join('&');
+    html = ejs.render(html, { data: renderData });
+    
+    console.log("Data rendered using ejs and html string returned !!!");
+    return html;
+  } catch (err) {
+    console.log('error in getPageData', err);
+  }
+}
+
+async function fetchPageTemplate(pageId) {
   try {
     const apiKey = process.env.API_KEY;
     const accessToken = process.env.API_ACCESS_TOKEN;
@@ -147,7 +168,7 @@ async function fetchEmailTemplate(emailPageId) {
     const hostName = store + '.myshopify.com';
     const apiVersion = '2023-01';
     const apiLocation = '/admin/api/';
-    const resource = '/pages/' + emailPageId;
+    const resource = '/pages/' + pageId;
     const shopAssetsUrl = 'https://' + hostName + apiLocation + apiVersion + resource + '.json';
     let url = shopAssetsUrl;
 
@@ -159,7 +180,7 @@ async function fetchEmailTemplate(emailPageId) {
       },
     });
 
-    console.log("Email Template fetched successfully from Shopify Page Id: " + emailPageId + " !!!");
+    console.log("Page Template fetched successfully from Shopify Page Id: " + pageId + " !!!");
 
     return res;
 
@@ -170,15 +191,7 @@ async function fetchEmailTemplate(emailPageId) {
 
 async function composeEmail(res, recommendations_attachment, macros_attachment, renderData) {
   try {
-    let parser = new DomParser();
-    let data = await res.text();
-
-    data = parser.parseFromString(data, 'text/xml');
-
-    let html = JSON.parse(data.rawHTML).page.body_html;
-    html = html.split('&lt;').join('<');
-    html = html.split('&gt;').join('>');
-    html = ejs.render(html, { data: renderData.personal_details });
+    let html = await getPageData(res, renderData.personal_details)
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     let unixTimestamp = Math.floor(new Date().getTime()/1000);
