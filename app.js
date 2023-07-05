@@ -204,7 +204,7 @@ async function composeEmail(res, recommendations_attachment, macros_attachment, 
     const msg = {
       to: renderData.personal_details.email,
       from: 'Justin@iamclovis.com', // Use the email address or domain you verified above
-      cc: 'Justin@iamclovis.com',
+      cc: 'support@iamclovis.com',
       subject: 'Your Custom Nutrition Plan',
       html: html,
       attachments: [
@@ -236,7 +236,7 @@ async function composeAnswersEmail(userAnswers_html, renderData) {
     let unixTimestamp = Math.floor(new Date().getTime()/1000);
     
     const msg = {
-      to: 'Justin@iamclovis.com',
+      to: 'support@iamclovis.com',
       from: 'Justin@iamclovis.com', // Use the email address or domain you verified above
       subject: 'User Quiz Answers',
       html: userAnswers_html,
