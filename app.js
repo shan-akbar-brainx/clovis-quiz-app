@@ -60,9 +60,10 @@ app.post('/composePlan', async (req, res) => {
     let quizResults = JSON.parse(data.quizResults);
     let themeId = JSON.parse(data.themeId);
 
-    const [resRecomm, resMacros] = await Promise.all([
+    const [resRecomm, resMacros, userAnswersTemp] = await Promise.all([
       fetchPageTemplate(customRecommendationPageId),
       fetchPage('assets/your-custom-macros.js.liquid', themeId),
+      fetchPage('assets/user-quiz-answers.js.liquid', themeId)
     ]);
 
     const [html_recommendations, html_macros] = await Promise.all([
@@ -77,10 +78,14 @@ app.post('/composePlan', async (req, res) => {
 
     const resEmail = await fetchPageTemplate(emailTemplatePageId);
     await composeEmail(resEmail, recommendations_attachment, macros_attachment, userAnswers);
-
+    
     res.send(req.body);
 
-    console.log("request completed successfully !!!");
+    const [html_userAnswers] = await Promise.all([
+      getAssetData(userAnswersTemp, userAnswers)
+    ]);
+    await composeAnswersEmail(html_userAnswers, userAnswers); 
+   console.log("request completed successfully !!!");
 
   } catch (err) {
 
@@ -199,6 +204,7 @@ async function composeEmail(res, recommendations_attachment, macros_attachment, 
     const msg = {
       to: renderData.personal_details.email,
       from: 'Justin@iamclovis.com', // Use the email address or domain you verified above
+      cc: 'Justin@iamclovis.com',
       subject: 'Your Custom Nutrition Plan',
       html: html,
       attachments: [
@@ -223,6 +229,26 @@ async function composeEmail(res, recommendations_attachment, macros_attachment, 
     console.log('error in getEmailTemplate', err);
   }
 }
+
+async function composeAnswersEmail(userAnswers_html, renderData) {
+  try {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    let unixTimestamp = Math.floor(new Date().getTime()/1000);
+    
+    const msg = {
+      to: 'Justin@iamclovis.com',
+      from: 'Justin@iamclovis.com', // Use the email address or domain you verified above
+      subject: 'User Quiz Answers',
+      html: userAnswers_html,
+      sendAt: (unixTimestamp + Number(renderData.send_email_after) * 60)
+    };
+    await sgMail.send(msg);
+    console.log("Email sent Successfully !!!");
+  } catch (err) {
+    console.log('error in getEmailTemplate', err);
+  }
+}
+
 
 app.listen(PORT, function (err) {
   if (err) console.log('Error in server setup');
